@@ -11,7 +11,7 @@ import (
 
 // tagsToExplore represents a constant []string that returns the HTML tags from which we will obtain words
 func tagsToExplore() []string {
-	return []string{"title", "p", "h1", "h2", "h3", "pre"}
+	return []string{"title", "p", "h1", "h2", "h3", "pre", "li"}
 }
 
 // Document represents an indexed document: stores the path, every distinct
@@ -21,7 +21,7 @@ type Document struct {
 	wordsIndex map[string]int // maps word -> nº of occurences
 }
 
-// New returns a struct that holds the indexed data of a document
+// New indexes an ".html" documents and returns a representation of it
 func New(path string) Document {
 	di, err := index(path)
 	if err != nil {
@@ -30,10 +30,12 @@ func New(path string) Document {
 	return di
 }
 
+// WordCount returns the number of distinct words in the document
 func (d Document) WordCount() int {
 	return len(d.wordsIndex)
 }
 
+// Path returns the path of the document
 func (d Document) Path() string {
 	return d.path
 }
@@ -51,7 +53,7 @@ func (d Document) Contains(term string) bool {
 	return false
 }
 
-// index indexes the document in "path"
+// index indexes the ".html" document in "path"
 func index(path string) (Document, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -87,13 +89,20 @@ func index(path string) (Document, error) {
 		wordsIndex: make(map[string]int), // maybe preallocate with len(words)
 	}
 
-	for _, word := range strings.Fields(words) {
-		if _, ok := doc.wordsIndex[word]; !ok {
-			doc.wordsIndex[word] = 1
+	for _, term := range strings.Fields(words) {
+		if !doc.Contains(term) { // first occurrence ot the term
+			doc.wordsIndex[term] = 1
 		} else {
-			doc.wordsIndex[word] = doc.wordsIndex[word] + 1
+			doc.wordsIndex[term] = doc.wordsIndex[term] + 1
 		}
 	}
 
+	// fmt.Printf("[DEBUG] %v\n", doc.wordsIndex)
+
 	return doc, nil
+}
+
+// String allows pretty printing of Document
+func (d Document) String() string {
+	return fmt.Sprintf("%s words: %d\n", d.path, d.WordCount())
 }
