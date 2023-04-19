@@ -1,8 +1,8 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"path/filepath"
 
 	"github.com/ebarped/game-of-life/pkg/engine"
 )
@@ -14,10 +14,16 @@ const (
 func main() {
 	e := engine.New()
 
-	err := filepath.WalkDir(DOCS_DIR, e.Load())
+	// index documentation
+	err := e.Load(DOCS_DIR)
 	if err != nil {
-		log.Fatalf("fatal error traversing docs: %s\n", err)
+		log.Fatalf("error loading: %s\n", err)
 	}
 
-	//fmt.Printf("Engine status: %s\n", e)
+	fmt.Printf("Engine status: \n%s", e)
+
+	docs := e.Search("api")
+	for _, doc := range docs {
+		fmt.Println("-", doc)
+	}
 }
