@@ -22,6 +22,10 @@ clean: # @HELP removes built binaries and temporary files
 clean:
 	@rm -rf dist
 
+bench: # @HELP executes benchmarks
+bench:
+	go test -v -bench=Bench -benchmem ./...
+
 help: # @HELP prints this message
 help:
 	@echo "TARGETS:"

@@ -27,6 +27,8 @@ go run main.go -serve
 - servir html para hacer busquedas
 
 ## TODO
+- expose search mehtod as API
+- UI in svelte
 - calculate idf for each term once! right now its being recalculated again for each doc to analyze
 - enable debug logs
 - add benchmarks
