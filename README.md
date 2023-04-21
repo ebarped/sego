@@ -29,10 +29,7 @@ go run main.go -serve
 ## TODO
 - expose search mehtod as API
 - UI in svelte
-- calculate idf for each term once! right now its being recalculated again for each doc to analyze
 - enable debug logs
-- add benchmarks
-- fix negative values!
 - almacenar el calculo de todos los TF en disco en json, para poder inicializar sin tener que reindexar de nuevo
     - cambiar la representacion en disco de json a protobuf/flatbuffers
 

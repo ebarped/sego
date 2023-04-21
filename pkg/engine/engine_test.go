@@ -4,7 +4,10 @@ import (
 	"testing"
 )
 
-const DOCS_DIR = "../../linux-kernel-docs"
+const (
+	DOCS_DIR     = "../../linux-kernel-docs"
+	SEARCH_QUERY = "memory management"
+)
 
 var e *Engine
 
@@ -15,6 +18,6 @@ func init() {
 
 func BenchmarkSearch(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		e.Search("memory management")
+		e.Search(SEARCH_QUERY)
 	}
 }

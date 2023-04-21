@@ -54,6 +54,7 @@ func (e *Engine) Load(path string) error {
 }
 
 // tf calculates the term frequency of a term in the indexed document
+// there is one value of tf for each term in each document
 func tf(term string, d document.Document) float64 {
 	numerator := float64(d.Occurrences(term)) // Number of times term t appears in a document
 	denominator := float64(d.WordCount())     // Total number of terms in the document
@@ -62,17 +63,12 @@ func tf(term string, d document.Document) float64 {
 }
 
 // idf calculates the inverse document frequency of a term in the set of documents
+// there is one value of idf for each term in all the documents
 func idf(term string, e Engine) float64 {
 	numerator := float64(e.documentCount())                      // Total number of documents
 	denominator := 1 + float64(e.countDocsThatContainTerm(term)) // Number of documents with term t in it
-	// fmt.Printf("[DEBUG] term: %s, idf-num=%.12f, idf-den=%.12f, idf=%.12f\n", term, numerator, denominator, math.Log10(numerator/denominator))
+	//fmt.Printf("[DEBUG] term: %s, idf-num=%.12f, idf-den=%.12f, idf=%.12f\n", term, numerator, denominator, math.Log10(numerator/denominator))
 	return math.Log10(numerator/denominator) + 1
-}
-
-// tf_idf calculates the tf-idf of a term in a document given a set of documents (loaded in the Engine)
-func tf_idf(term string, d document.Document, e Engine) float64 {
-	// fmt.Printf("\t[DEBUG] tf=%.12f, idf=%.12f, tf-idf=%.12f\n", tf(term, d), idf(term, e), tf(term, d)*idf(term, e))
-	return tf(term, d) * idf(term, e)
 }
 
 // countDocsThatContainTerm returns the count of docs in the engine that contains the term "term"
@@ -89,6 +85,7 @@ func (e Engine) countDocsThatContainTerm(term string) int {
 // Search return an array of strings with the documents that are more relevant to show info about the term, ordered
 func (e Engine) Search(query string) []string {
 	query = strings.ToLower(query)
+	queryTerms := strings.Fields(query)
 
 	// docRanked stores the doc path and the tf-idf value
 	// we use this representation to be able to order the result before returning it
@@ -99,13 +96,19 @@ func (e Engine) Search(query string) []string {
 
 	var ranking []docRanked
 
+	// precalculate IDF of each term of the query
+	termsIDF := make(map[string]float64)
+	for _, t := range queryTerms {
+		termsIDF[t] = idf(t, e)
+	}
+
 	// for each document, calculate the tf-idf of each term of the query and sum them
 	for _, doc := range e.index {
 		dr := docRanked{
 			path: doc.Path(),
 		}
-		for _, term := range strings.Fields(query) {
-			dr.value += tf_idf(term, doc, e)
+		for _, term := range queryTerms {
+			dr.value += tf(term, doc) * termsIDF[term]
 		}
 		ranking = append(ranking, dr)
 	}
