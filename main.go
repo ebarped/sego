@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/ebarped/game-of-life/pkg/engine"
+	"github.com/ebarped/game-of-life/pkg/server"
 )
 
 const (
@@ -41,12 +42,8 @@ func main() {
 
 	// search
 	if *serve {
-		e := engine.New(engine.WithState(STATE_PATH))
-		docs := e.Search("memory management")
-		fmt.Println("Results:")
-		for _, doc := range docs {
-			fmt.Println("-", doc)
-		}
+		s := server.New(API_PORT, STATE_PATH)
+		s.Start()
 	}
 
 	os.Exit(0)

@@ -21,13 +21,18 @@ go run main.go -index
 go run main.go -serve
 ```
 
+- Query the server:
+```shell
+curl 'localhost:4000/search?query="memory%20management"'
+```
+
 ## Inner workings
 - recorrer todos los ficheros .html
 - parsearlos y construir un json que mapee cada palabra a los docs donde aparece, y cuantas veces aparece en cada doc
 - servir html para hacer busquedas
 
 ## TODO
-- expose search mehtod as API
+- expose search method as API
 - UI in svelte
 - enable debug logs
 - probar el cambio de representacion en disco de json a protobuf/flatbuffers
