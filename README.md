@@ -30,8 +30,7 @@ go run main.go -serve
 - expose search mehtod as API
 - UI in svelte
 - enable debug logs
-- almacenar el calculo de todos los TF en disco en json, para poder inicializar sin tener que reindexar de nuevo
-    - cambiar la representacion en disco de json a protobuf/flatbuffers
+- probar el cambio de representacion en disco de json a protobuf/flatbuffers
 
 ## Indexed files
 We will index the linux kernel documentation. We have obtained this docs from the linux repo:

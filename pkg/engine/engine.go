@@ -1,9 +1,12 @@
 package engine
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/fs"
+	"log"
 	"math"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -15,22 +18,29 @@ const topN = 5 // return only topN documents as result of the search
 
 // Engine has a slice of indexed documents
 type Engine struct {
-	index []document.Document
+	Index []document.Document `json:"index"`
 }
 
 // New creates a new instance of the search engine
-func New() *Engine {
-	return &Engine{} // maybe preallocate index with an estimate doc count
+func New(opts ...func(Engine) Engine) *Engine {
+	var e Engine // maybe preallocate index with an estimate doc count
+
+	// apply opts
+	for _, opt := range opts {
+		e = opt(e)
+	}
+
+	return &e
 }
 
 // documentCount returns the number of document that the engine has loaded
 func (e Engine) documentCount() int {
-	return len(e.index)
+	return len(e.Index)
 }
 
 // Add adds a document.Document to the engine
 func (e *Engine) add(doc document.Document) {
-	e.index = append(e.index, doc)
+	e.Index = append(e.Index, doc)
 }
 
 // Load will traverse the "path" folders locating docs that ends in ".html", indexing & storing them in the engine
@@ -51,6 +61,40 @@ func (e *Engine) Load(path string) error {
 		return err
 	}
 	return nil
+}
+
+// SaveState will save the state of the engine to disk
+func (e Engine) SaveState(path string) error {
+	f, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("error: cannot create file to save the state on %s: %s\n", path, err)
+	}
+
+	err = json.NewEncoder(f).Encode(e)
+	if err != nil {
+		return fmt.Errorf("error: cannot store engine state as json: %s\n", err)
+
+	}
+
+	return nil
+}
+
+// WithState will load the state from the index.json file into the engine
+func WithState(path string) func(Engine) Engine {
+	return func(e Engine) Engine {
+		f, err := os.Open(path)
+		if err != nil {
+			log.Fatalf("error: cannot open file to load state from %s: %s\n", path, err)
+		}
+
+		err = json.NewDecoder(f).Decode(&e)
+		if err != nil {
+			log.Fatalf("error: cannot load engine state from json %s: %s\n", path, err)
+		}
+
+		return e
+	}
+
 }
 
 // tf calculates the term frequency of a term in the indexed document
@@ -74,7 +118,7 @@ func idf(term string, e Engine) float64 {
 // countDocsThatContainTerm returns the count of docs in the engine that contains the term "term"
 func (e Engine) countDocsThatContainTerm(term string) int {
 	var result int
-	for _, d := range e.index {
+	for _, d := range e.Index {
 		if d.Contains(term) {
 			result++
 		}
@@ -103,9 +147,9 @@ func (e Engine) Search(query string) []string {
 	}
 
 	// for each document, calculate the tf-idf of each term of the query and sum them
-	for _, doc := range e.index {
+	for _, doc := range e.Index {
 		dr := docRanked{
-			path: doc.Path(),
+			path: doc.Path,
 		}
 		for _, term := range queryTerms {
 			dr.value += tf(term, doc) * termsIDF[term]
@@ -134,7 +178,7 @@ func (e Engine) Search(query string) []string {
 func (e Engine) String() string {
 	var result string
 	fmt.Printf("Engine has %d documents loaded\n", e.documentCount())
-	for _, doc := range e.index {
+	for _, doc := range e.Index {
 		result += fmt.Sprintf("%s", doc)
 	}
 	return result

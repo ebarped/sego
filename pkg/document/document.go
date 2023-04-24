@@ -17,8 +17,8 @@ func tagsToExplore() []string {
 // Document represents an indexed document: stores the path, every distinct
 // term and the number of occurrences of the term inside the doc
 type Document struct {
-	path       string         // path of the document
-	wordsIndex map[string]int // maps word -> nº of occurences
+	Path       string         `json:"path"`        // path of the document
+	WordsIndex map[string]int `json:"words_index"` // maps word -> nº of occurences
 }
 
 // New indexes an ".html" documents and returns a representation of it
@@ -32,22 +32,17 @@ func New(path string) Document {
 
 // WordCount returns the number of distinct words in the document
 func (d Document) WordCount() int {
-	return len(d.wordsIndex)
-}
-
-// Path returns the path of the document
-func (d Document) Path() string {
-	return d.path
+	return len(d.WordsIndex)
 }
 
 // Occurrences return all the occurrences of the term in the doc
 func (d Document) Occurrences(term string) int {
-	return d.wordsIndex[term]
+	return d.WordsIndex[term]
 }
 
 // Contains return true if the term exists in the doc
 func (d Document) Contains(term string) bool {
-	if _, ok := d.wordsIndex[term]; ok {
+	if _, ok := d.WordsIndex[term]; ok {
 		return true
 	}
 	return false
@@ -85,15 +80,15 @@ func index(path string) (Document, error) {
 	words = strings.Map(removePunctuation, words)
 
 	doc := Document{
-		path:       path,
-		wordsIndex: make(map[string]int), // maybe preallocate with len(words)
+		Path:       path,
+		WordsIndex: make(map[string]int), // maybe preallocate with len(words)
 	}
 
 	for _, term := range strings.Fields(words) {
 		if !doc.Contains(term) { // first occurrence ot the term
-			doc.wordsIndex[term] = 1
+			doc.WordsIndex[term] = 1
 		} else {
-			doc.wordsIndex[term] = doc.wordsIndex[term] + 1
+			doc.WordsIndex[term] = doc.WordsIndex[term] + 1
 		}
 	}
 
@@ -104,5 +99,5 @@ func index(path string) (Document, error) {
 
 // String allows pretty printing of Document
 func (d Document) String() string {
-	return fmt.Sprintf("%s words: %d\n", d.path, d.WordCount())
+	return fmt.Sprintf("%s words: %d\n", d.Path, d.WordCount())
 }
