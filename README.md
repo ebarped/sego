@@ -26,6 +26,12 @@ go run main.go -serve
 curl 'localhost:4000/search?query="memory%20management"'
 ```
 
+## Frontend
+```shell
+cd ui
+npm run dev
+```
+
 ## Inner workings
 - recorrer todos los ficheros .html
 - parsearlos y construir un json que mapee cada palabra a los docs donde aparece, y cuantas veces aparece en cada doc
