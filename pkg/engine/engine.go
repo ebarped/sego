@@ -7,10 +7,10 @@ import (
 	"log"
 	"math"
 	"os"
-	"path/filepath"
 	"sort"
 	"strings"
 
+	"github.com/charlievieth/fastwalk"
 	"github.com/ebarped/game-of-life/pkg/document"
 )
 
@@ -45,7 +45,10 @@ func (e *Engine) add(doc document.Document) {
 
 // Load will traverse the "path" folders locating docs that ends in ".html", indexing & storing them in the engine
 func (e *Engine) Load(path string) error {
-	err := filepath.WalkDir(path, func(path string, d fs.DirEntry, err error) error {
+	conf := fastwalk.Config{
+		Follow: false,
+	}
+	err := fastwalk.Walk(&conf, path, func(path string, d fs.DirEntry, err error) error {
 		fileName := d.Name()
 		if !d.IsDir() && strings.HasSuffix(fileName, ".html") {
 			fmt.Printf("Indexing %q\n", path)
