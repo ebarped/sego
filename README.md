@@ -38,7 +38,7 @@ npm run dev
 - servir html para hacer busquedas
 
 ## TODO
-- expose search method as API
+- Increase performance of engine.Load()
 - UI in svelte
 - enable debug logs
 - probar el cambio de representacion en disco de json a protobuf/flatbuffers

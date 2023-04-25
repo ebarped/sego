@@ -21,3 +21,11 @@ func BenchmarkSearch(b *testing.B) {
 		e.Search(SEARCH_QUERY)
 	}
 }
+
+func BenchmarkLoad(b *testing.B) {
+	e := New()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		e.Load(DOCS_DIR)
+	}
+}
