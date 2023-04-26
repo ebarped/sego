@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/fs"
 	"log"
@@ -10,6 +9,9 @@ import (
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/bytedance/sonic/decoder"
+	"github.com/bytedance/sonic/encoder"
 
 	"github.com/charlievieth/fastwalk"
 	"github.com/ebarped/sego/pkg/document"
@@ -77,7 +79,7 @@ func (e Engine) SaveState(path string) error {
 		return fmt.Errorf("error: cannot create file to save the state on %s: %s\n", path, err)
 	}
 
-	err = json.NewEncoder(f).Encode(e)
+	encoder.NewStreamEncoder(f).Encode(e)
 	if err != nil {
 		return fmt.Errorf("error: cannot store engine state as json: %s\n", err)
 	}
@@ -93,7 +95,7 @@ func WithState(path string) func(Engine) Engine {
 			log.Fatalf("error: cannot open file to load state from %s: %s\n", path, err)
 		}
 
-		err = json.NewDecoder(f).Decode(&e)
+		err = decoder.NewStreamDecoder(f).Decode(&e)
 		if err != nil {
 			log.Fatalf("error: cannot load engine state from json %s: %s\n", path, err)
 		}
