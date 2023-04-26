@@ -38,10 +38,10 @@ npm run dev
 - servir html para hacer busquedas
 
 ## TODO
-- Increase performance of engine.Load()
 - UI in svelte
 - enable debug logs
-- probar el cambio de representacion en disco de json a protobuf/flatbuffers
+- probar libreria de fast encoding con json
+- probar el cambio de representacion en disco de json a gob, protobuf y flatbuffers
 
 ## Indexed files
 We will index the linux kernel documentation. We have obtained this docs from the linux repo:

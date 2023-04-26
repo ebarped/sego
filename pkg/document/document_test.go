@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-const path = "../../linux-kernel-docs/genindex.html"
+const path = "../../linux-kernel-docs/admin-guide/abi-testing.html"
 
 func BenchmarkIndex(b *testing.B) {
 	var di Document

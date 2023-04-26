@@ -58,14 +58,17 @@ func index(path string) (Document, error) {
 
 	htmlFile, err := goquery.NewDocumentFromReader(file)
 	if err != nil {
-		return Document{}, fmt.Errorf("error parsing html file %s: %s\n", path, err)
+		return Document{}, fmt.Errorf("error parsing .html file %s: %s\n", path, err)
 	}
 
-	var words string
+	var sb strings.Builder
 
 	for _, tag := range tagsToExplore() {
 		htmlFile.Find(tag).Each(func(index int, selection *goquery.Selection) {
-			words += strings.ToLower(selection.Text()) + "\n"
+			_, err := sb.WriteString(strings.ToLower(selection.Text()) + "\n")
+			if err != nil {
+				log.Printf("error parsing tag %s from file %s: %s\n", tag, file.Name(), "a")
+			}
 		})
 	}
 
@@ -77,11 +80,11 @@ func index(path string) (Document, error) {
 		}
 	}
 
-	words = strings.Map(removePunctuation, words)
+	words := strings.Map(removePunctuation, sb.String())
 
 	doc := Document{
 		Path:       path,
-		WordsIndex: make(map[string]int), // maybe preallocate with len(words)
+		WordsIndex: make(map[string]int),
 	}
 
 	for _, term := range strings.Fields(words) {
