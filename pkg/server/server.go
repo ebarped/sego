@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/ebarped/game-of-life/pkg/engine"
+	"github.com/ebarped/sego/pkg/engine"
 	"github.com/go-chi/chi/v5"
 )
 

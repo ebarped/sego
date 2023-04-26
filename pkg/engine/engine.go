@@ -9,9 +9,10 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/charlievieth/fastwalk"
-	"github.com/ebarped/game-of-life/pkg/document"
+	"github.com/ebarped/sego/pkg/document"
 )
 
 const topN = 5 // return only topN documents as result of the search
@@ -45,24 +46,27 @@ func (e *Engine) add(doc document.Document) {
 
 // Load will traverse the "path" folders locating docs that ends in ".html", indexing & storing them in the engine
 func (e *Engine) Load(path string) error {
+	var mu sync.Mutex
+
 	conf := fastwalk.Config{
 		Follow: false,
 	}
+
 	err := fastwalk.Walk(&conf, path, func(path string, d fs.DirEntry, err error) error {
-		fileName := d.Name()
-		if !d.IsDir() && strings.HasSuffix(fileName, ".html") {
+		if !d.IsDir() && strings.HasSuffix(d.Name(), ".html") {
 			fmt.Printf("Indexing %q\n", path)
 			doc := document.New(path)
-			if err != nil {
-				return err
-			}
+
+			mu.Lock()
 			e.add(doc)
+			mu.Unlock()
 		}
 		return nil
 	})
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -76,7 +80,6 @@ func (e Engine) SaveState(path string) error {
 	err = json.NewEncoder(f).Encode(e)
 	if err != nil {
 		return fmt.Errorf("error: cannot store engine state as json: %s\n", err)
-
 	}
 
 	return nil
@@ -97,7 +100,6 @@ func WithState(path string) func(Engine) Engine {
 
 		return e
 	}
-
 }
 
 // tf calculates the term frequency of a term in the indexed document
@@ -114,7 +116,7 @@ func tf(term string, d document.Document) float64 {
 func idf(term string, e Engine) float64 {
 	numerator := float64(e.documentCount())                      // Total number of documents
 	denominator := 1 + float64(e.countDocsThatContainTerm(term)) // Number of documents with term t in it
-	//fmt.Printf("[DEBUG] term: %s, idf-num=%.12f, idf-den=%.12f, idf=%.12f\n", term, numerator, denominator, math.Log10(numerator/denominator))
+	// fmt.Printf("[DEBUG] term: %s, idf-num=%.12f, idf-den=%.12f, idf=%.12f\n", term, numerator, denominator, math.Log10(numerator/denominator))
 	return math.Log10(numerator/denominator) + 1
 }
 

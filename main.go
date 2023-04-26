@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/ebarped/game-of-life/pkg/engine"
-	"github.com/ebarped/game-of-life/pkg/server"
+	"github.com/ebarped/sego/pkg/engine"
+	"github.com/ebarped/sego/pkg/server"
 )
 
 const (

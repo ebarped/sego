@@ -1,9 +1,12 @@
+############## COMMON VARS SECTION ##############
+APP_NAME = sego
+
 ############## TARGETS SECTION ##############
 .PHONY: all test clean
 
 build: # @HELP builds for current GOOS/GOARCH
 build:
-	@goreleaser build --snapshot --single-target --skip-validate
+	@CGO_ENABLED=0 go build -ldflags "-s -w" -o $(APP_NAME) main.go
 
 snapshot: # @HELP generate a snapshot for all OS_ARCH combinations
 snapshot:
@@ -24,7 +27,7 @@ clean:
 
 bench: # @HELP executes benchmarks
 bench:
-	go test -v -bench=Bench -benchmem ./...
+	@go test -v -bench=Bench -benchmem ./...
 
 help: # @HELP prints this message
 help:

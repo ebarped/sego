@@ -1,4 +1,4 @@
-project_name: game-of-life
+project_name: sego
 before:
   hooks:
     - go mod tidy
