@@ -69,6 +69,8 @@ func (s Server) handleSearch() http.HandlerFunc {
 			Documents: res,
 		}
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		err := json.NewEncoder(w).Encode(result)
 		if err != nil {

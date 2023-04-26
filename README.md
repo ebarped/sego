@@ -38,11 +38,8 @@ npm run dev
 - servir html para hacer busquedas
 
 ## TODO
-- mejorar el Load()
-    - eliminar el mutex y que cada goroutine almacene en su posicion del slice
-- UI in svelte
+- probar a que los docs esten en un .zip
 - enable debug logs
-- probar libreria de fast encoding con json
 - probar el cambio de representacion en disco de json a gob, protobuf y flatbuffers
 
 ## Indexed files
