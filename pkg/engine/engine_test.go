@@ -5,8 +5,9 @@ import (
 )
 
 const (
-	DOCS_DIR     = "../../linux-kernel-docs"
-	SEARCH_QUERY = "memory management"
+	DOCS_DIR        = "../../linux-kernel-docs"
+	SEARCH_QUERY    = "memory management"
+	SAVE_STATE_PATH = "/tmp/sego_index.json"
 )
 
 var e *Engine
@@ -27,5 +28,11 @@ func BenchmarkLoad(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		e.Load(DOCS_DIR)
+	}
+}
+
+func BenchmarkSaveState(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		e.SaveState(SAVE_STATE_PATH)
 	}
 }
