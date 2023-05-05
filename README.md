@@ -41,6 +41,7 @@ npm run dev
 - probar a que los docs esten en un .zip
 - enable debug logs
 - probar el cambio de representacion en disco de json a gob, protobuf y flatbuffers
+- docker y docker-compose
 
 ## Indexed files
 We will index the linux kernel documentation. We have obtained this docs from the linux repo:
@@ -51,4 +52,3 @@ make htmldocs
 ```
 
 Now, inside `Documentation/output`, there will be all the docs in `.html` format.
-We will only index the docs from `core-api` to speed up.

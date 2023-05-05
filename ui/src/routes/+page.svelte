@@ -5,10 +5,12 @@
 	let inputSubmitted = false;
 	let rerender = false;
 	let query = "";
+
 	// handle ENTER press
 	const sendInput = (e) => {
 		if (e.charCode === 13) {
-			console.log("Searching: " + query);
+			query = e.target.value;
+			console.log("<MAIN> Searching: " + query);
 			inputSubmitted = true;
 			rerender = !rerender;
 		}
@@ -30,12 +32,13 @@
 					class="input"
 					type="text"
 					placeholder="Search"
-					bind:value={query}
 					on:keypress={sendInput}
 				/>
 			</div>
 
-			{#if inputSubmitted && query != ""}
+			<!-- show results once the enter key has been sent -->
+			{#if inputSubmitted}
+				<!-- rerender when query changes & enter is sent-->
 				{#key rerender}
 					<Results {query} />
 				{/key}
