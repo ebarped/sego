@@ -22,7 +22,7 @@ type Server struct {
 	engine *engine.Engine
 }
 
-func New(p string, statePath string) Server {
+func New(p string, e *engine.Engine) Server {
 	port, err := strconv.Atoi(p)
 	if err != nil {
 		log.Fatalf("error parsing port of server: %s\n", err)
@@ -31,7 +31,7 @@ func New(p string, statePath string) Server {
 	s := Server{
 		port:   port,
 		router: chi.NewRouter(),
-		engine: engine.New(engine.WithState(statePath)),
+		engine: e,
 	}
 
 	s.router.Get("/search", s.handleSearch())

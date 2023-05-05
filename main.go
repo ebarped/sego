@@ -42,7 +42,8 @@ func main() {
 
 	// search
 	if *serve {
-		s := server.New(API_PORT, STATE_PATH)
+		e := engine.New(engine.WithState(STATE_PATH))
+		s := server.New(API_PORT, e)
 		s.Start()
 	}
 

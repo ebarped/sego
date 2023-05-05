@@ -24,8 +24,11 @@ type Engine struct {
 	Index []document.Document `json:"index"`
 }
 
+// OptFunc enables constructing a new engine with options
+type OptFunc func(Engine) Engine
+
 // New creates a new instance of the search engine
-func New(opts ...func(Engine) Engine) *Engine {
+func New(opts ...OptFunc) *Engine {
 	var e Engine // maybe preallocate index with an estimate doc count
 
 	// apply opts
@@ -88,7 +91,7 @@ func (e Engine) SaveState(path string) error {
 }
 
 // WithState will load the state from the index.json file into the engine
-func WithState(path string) func(Engine) Engine {
+func WithState(path string) OptFunc {
 	return func(e Engine) Engine {
 		f, err := os.Open(path)
 		if err != nil {
