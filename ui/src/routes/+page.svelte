@@ -16,7 +16,7 @@
 </script>
 
 <!-- outer container, align all to center -->
-<div class="container h-full mx-auto flex justify-center items-center">
+<div class="container h-full mx-auto flex justify-center items-start py-24">
 	<!-- number of columns -->
 	<div class="grid grid-cols-1">
 		<h1 class="text-center py-2">Linux API Documentation Search Engine</h1>
