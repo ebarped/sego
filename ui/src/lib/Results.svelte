@@ -1,6 +1,6 @@
-<script>
+<script lang="ts">
     export let query = "";
-    console.log("<Results.svelte> busco:" + query);
+    console.log("<Results.svelte> searching: " + query);
     const fetchResult = (async () => {
         const response = await fetch(
             "http://localhost:4000/search?query=" + query

@@ -1,20 +1,10 @@
 <script lang="ts">
-	import { Autocomplete } from "@skeletonlabs/skeleton";
 	import Results from "../lib/Results.svelte";
+	import Search from "../lib/Search.svelte";
 
+	let query = "";
 	let inputSubmitted = false;
 	let rerender = false;
-	let query = "";
-
-	// handle ENTER press
-	const sendInput = (e) => {
-		if (e.charCode === 13) {
-			query = e.target.value;
-			console.log("<MAIN> Searching: " + query);
-			inputSubmitted = true;
-			rerender = !rerender;
-		}
-	};
 </script>
 
 <!-- outer container, align all to center -->
@@ -26,16 +16,8 @@
 		<hr />
 		<!-- vertical padding from the previous component -->
 		<div class="grid py-3">
-			<!-- center and put maximum size -->
-			<div class="container mx-auto justify-center max-w-2xl">
-				<input
-					class="input"
-					type="text"
-					placeholder="Search"
-					on:keypress={sendInput}
-				/>
-			</div>
-
+			<!-- bind variables to propagate child changes to parent -->
+			<Search bind:query bind:inputSubmitted bind:rerender />
 			<!-- show results once the enter key has been sent -->
 			{#if inputSubmitted}
 				<!-- rerender when query changes & enter is sent-->

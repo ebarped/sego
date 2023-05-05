@@ -1,14 +1,15 @@
 # sego
 Search Engine written in Go.
 
-This engine will index the docs from `linux-docs` folder using the TF-IDF method and serve them.
+This engine will index the linux API documentation stored in `linux-docs` folder using the `TF-IDF` method.
+It can also serve them through an API.
 
 ## Documentation
 [Wikipedia](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
 
 :notebook:
-- For Term frequency, we use the `raw count weighting scheme`.
-- For Inverse document frequency, we use the `inverse document frequency smooth weighting scheme`.
+- For **Term Frequency**, we use the `raw count weighting scheme`.
+- For **Inverse document Frequency**, we use the `inverse document frequency smooth weighting scheme`.
 
 ## Run
 - Index files:
@@ -29,19 +30,19 @@ curl 'localhost:4000/search?query="memory%20management"'
 ## Frontend
 ```shell
 cd ui
+npm install
 npm run dev
 ```
 
 ## Inner workings
-- recorrer todos los ficheros .html
-- parsearlos y construir un json que mapee cada palabra a los docs donde aparece, y cuantas veces aparece en cada doc
-- servir html para hacer busquedas
+- Index: parse the .html docs into a json that maps, for each document every word occurrence inside it.
+- Serve: load the json file and apply `TF-IDF` algorithm to the search terms.
 
 ## TODO
-- probar a que los docs esten en un .zip
+- store the linux api docs inside a .zip
 - enable debug logs
-- probar el cambio de representacion en disco de json a gob, protobuf y flatbuffers
-- docker y docker-compose
+- try changing representation format to a more performant one
+- docker/docker-compose
 
 ## Indexed files
 We will index the linux kernel documentation. We have obtained this docs from the linux repo:
