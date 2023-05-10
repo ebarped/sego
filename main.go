@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	DOCS_DIR   = "linux-kernel-docs"
+	DOCS_PATH  = "linux-kernel-docs.tgz"
 	STATE_PATH = "index.json"
 	API_PORT   = "4000"
 )
@@ -32,7 +32,7 @@ func main() {
 	if *index {
 		start := time.Now()
 		e := engine.New()
-		err := e.Load(DOCS_DIR)
+		err := e.Load(DOCS_PATH)
 		if err != nil {
 			log.Fatalf("error loading: %s\n", err)
 		}

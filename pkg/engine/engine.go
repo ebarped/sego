@@ -1,7 +1,10 @@
 package engine
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"fmt"
+	"io"
 	"io/fs"
 	"log"
 	"math"
@@ -49,15 +52,20 @@ func (e *Engine) add(doc document.Document) {
 	e.Index = append(e.Index, doc)
 }
 
-// Load will traverse the "path" folders locating docs that ends in ".html", indexing & storing them in the engine
-func (e *Engine) Load(path string) error {
+// Load will traverse decompress the "docs_path" file, traverse files docs that
+// ends in ".html", indexing & storing them in the engine
+func (e *Engine) Load(docs_path string) error {
 	var mu sync.Mutex
 
+	// decompress documentation
+	err := untargz(".", docs_path)
+	path := strings.TrimSuffix(docs_path, ".tgz")
+
+	// traverse doc files, index them & store them into the engine
 	conf := fastwalk.Config{
 		Follow: false,
 	}
-
-	err := fastwalk.Walk(&conf, path, func(path string, d fs.DirEntry, err error) error {
+	err = fastwalk.Walk(&conf, path, func(path string, d fs.DirEntry, err error) error {
 		if !d.IsDir() && strings.HasSuffix(d.Name(), ".html") {
 			fmt.Printf("Indexing %q\n", path)
 			doc := document.New(path)
@@ -192,4 +200,50 @@ func (e Engine) String() string {
 		result += fmt.Sprintf("%s", doc)
 	}
 	return result
+}
+
+// untargz decompreses a .tar.gz file
+func untargz(dst, src string) error {
+	gzippedFile, err := os.Open(src)
+	if err != nil {
+		return fmt.Errorf("untargz: error opening file %s: %w", src, err)
+	}
+	defer gzippedFile.Close()
+
+	gzr, err := gzip.NewReader(gzippedFile)
+	if err != nil {
+		return err
+	}
+	defer gzr.Close()
+
+	tr := tar.NewReader(gzr)
+	var header *tar.Header
+	for header, err = tr.Next(); err == nil; header, err = tr.Next() {
+		switch header.Typeflag {
+		case tar.TypeDir:
+			if err := os.Mkdir(header.Name, 0755); err != nil {
+				return fmt.Errorf("untargz: Mkdir() failed: %w", err)
+			}
+		case tar.TypeReg:
+			outFile, err := os.Create(header.Name)
+			if err != nil {
+				return fmt.Errorf("untargz: Create() failed: %w", err)
+			}
+
+			if _, err := io.Copy(outFile, tr); err != nil {
+				// outFile.Close error omitted as Copy error is more interesting at this point
+				outFile.Close()
+				return fmt.Errorf("untargz: Copy() failed: %w", err)
+			}
+			if err := outFile.Close(); err != nil {
+				return fmt.Errorf("untargz: Close() failed: %w", err)
+			}
+		default:
+			return fmt.Errorf("untargz: uknown type: %b in %s", header.Typeflag, header.Name)
+		}
+	}
+	if err != io.EOF {
+		return fmt.Errorf("untargz: Next() failed: %w", err)
+	}
+	return nil
 }

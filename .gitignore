@@ -1,3 +1,5 @@
 dist
 *.txt
 index.json
+linux-kernel-docs
+pkg/engine/linux-kernel-docs

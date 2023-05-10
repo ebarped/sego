@@ -24,7 +24,7 @@ go run main.go -serve
 
 - Query the server:
 ```shell
-curl 'localhost:4000/search?query="memory%20management"'
+curl 'localhost:4000/search?query=memory%20management'
 ```
 
 ## Frontend
@@ -39,7 +39,6 @@ npm run dev
 - Serve: load the json file and apply `TF-IDF` algorithm to the search terms.
 
 ## TODO
-- store the linux api docs inside a .zip
 - enable debug logs
 - try changing representation format to a more performant one
 - docker/docker-compose
