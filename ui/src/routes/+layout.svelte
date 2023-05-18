@@ -5,16 +5,18 @@
 	import "@skeletonlabs/skeleton/styles/all.css";
 	// Most of your app wide CSS should be put in this file
 	import "../app.postcss";
-	import { AppBar, AppShell } from "@skeletonlabs/skeleton";
+
+	import {
+		computePosition,
+		autoUpdate,
+		offset,
+		shift,
+		flip,
+		arrow,
+	} from "@floating-ui/dom"; //https://www.skeleton.dev/utilities/popups#installation
+	import { storePopup } from "@skeletonlabs/skeleton";
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 </script>
 
-<AppShell>
-	<svelte:fragment slot="header">
-		<AppBar>
-			<h3 class="text-left">Sego</h3>
-		</AppBar>
-	</svelte:fragment>
-
-	<!-- slot represents the actual content -->
-	<slot />
-</AppShell>
+<!-- slot represents the actual content -->
+<slot />

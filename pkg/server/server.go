@@ -48,7 +48,11 @@ func (s *Server) Start() {
 // will handle the /search?query="example of a query" route
 func (s Server) handleSearch() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var response string
+		var (
+			response    string
+			resultCount int
+			err         error
+		)
 
 		query := r.URL.Query().Get("query")
 		if query == "" || query == "\"\"" {
@@ -58,9 +62,22 @@ func (s Server) handleSearch() http.HandlerFunc {
 			return
 		}
 
-		log.Printf("searching for %q\n", query)
+		resultCountStr := r.URL.Query().Get("count")
+		if resultCountStr == "" {
+			resultCount = 5
+		} else {
+			resultCount, err = strconv.Atoi(resultCountStr)
+			if err != nil {
+				fmt.Printf("error parsing integer from %s: %s\n", resultCountStr, err)
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(fmt.Sprintf("error parsing the result count:%s", err)))
+				return
+			}
+		}
 
-		res := s.engine.Search(query)
+		log.Printf("searching for %q, get %d results.\n", query, resultCount)
+
+		res := s.engine.Search(query, resultCount)
 		for _, doc := range res {
 			response += doc + "\n"
 		}
@@ -72,7 +89,7 @@ func (s Server) handleSearch() http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		err := json.NewEncoder(w).Encode(result)
+		err = json.NewEncoder(w).Encode(result)
 		if err != nil {
 			log.Printf("error writing results to client: %s\n", err)
 		}

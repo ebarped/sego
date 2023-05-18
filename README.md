@@ -27,6 +27,11 @@ go run main.go -serve
 curl 'localhost:4000/search?query=memory%20management'
 ```
 
+- Specify the result count (defaults to 5):
+```shell
+curl 'localhost:4000/search?query=memory%20management&count=10'
+```
+
 ## Frontend
 ```shell
 cd ui

@@ -20,8 +20,6 @@ import (
 	"github.com/ebarped/sego/pkg/document"
 )
 
-const topN = 5 // return only topN documents as result of the search
-
 // Engine has a slice of indexed documents
 type Engine struct {
 	Index []document.Document `json:"index"`
@@ -145,7 +143,7 @@ func (e Engine) countDocsThatContainTerm(term string) int {
 }
 
 // Search return an array of strings with the documents that are more relevant to show info about the term, ordered
-func (e Engine) Search(query string) []string {
+func (e Engine) Search(query string, resultCount int) []string {
 	query = strings.ToLower(query)
 	queryTerms := strings.Fields(query)
 
@@ -183,7 +181,7 @@ func (e Engine) Search(query string) []string {
 
 	// return only topN docs
 	fmt.Printf("[DEBUG] Results\n")
-	for i := 0; i < topN && topN < len(ranking); i++ {
+	for i := 0; i < resultCount && resultCount < len(ranking); i++ {
 		fmt.Printf("[DEBUG] - %s -> %.12f\n", ranking[i].path, ranking[i].value)
 		result = append(result, ranking[i].path)
 		// fmt.Printf("[DEBUG] Ranking of %s: %f\n", ranking[i].path, ranking[i].value)
