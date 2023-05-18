@@ -1,14 +1,14 @@
 <script lang="ts">
     export let query = "";
     export let inputSubmitted = false;
-    export let rerender = false;
+    export let rerenderSearch = false;
 
     // when ENTER press, update state to trigger a new search and rerender of Results
     const updateState = (e) => {
         if (e.charCode === 13) {
             query = e.target.value;
             inputSubmitted = true;
-            rerender = !rerender;
+            rerenderSearch = !rerenderSearch;
             console.log("<Search.svelte> searching: " + query);
         }
     };

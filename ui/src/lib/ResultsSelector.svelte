@@ -4,6 +4,7 @@
     import { popup } from "@skeletonlabs/skeleton";
     import type { PopupSettings } from "@skeletonlabs/skeleton";
 
+    export let rerenderSearch: boolean;
     export let rscount: number;
 
     const popupCombobox: PopupSettings = {
@@ -11,6 +12,11 @@
         target: "popupCombobox", // Matches the data-popup value on your popup element
         placement: "bottom", // Defines which side of your trigger the popup will appear
         closeQuery: ".listbox-item", // closes popup
+    };
+
+    const rerenderSearchFunc = (e: MouseEvent, count: number) => {
+        rscount = count;
+        rerenderSearch = !rerenderSearch;
     };
 </script>
 
@@ -24,13 +30,28 @@
 
 <div class="card w-48 shadow-xl py-2" data-popup="popupCombobox">
     <ListBox rounded="rounded-none">
-        <ListBoxItem bind:group={rscount} name="rscount" value="5">
+        <ListBoxItem
+            bind:group={rscount}
+            on:click={(e) => rerenderSearchFunc(e, 5)}
+            name="rscount"
+            value="5"
+        >
             Nº of Results: 5
         </ListBoxItem>
-        <ListBoxItem bind:group={rscount} name="rscount" value="10">
+        <ListBoxItem
+            bind:group={rscount}
+            on:click={(e) => rerenderSearchFunc(e, 10)}
+            name="rscount"
+            value="10"
+        >
             Nº of Results: 10
         </ListBoxItem>
-        <ListBoxItem bind:group={rscount} name="rscount" value="15">
+        <ListBoxItem
+            bind:group={rscount}
+            on:click={(e) => rerenderSearchFunc(e, 15)}
+            name="rscount"
+            value="15"
+        >
             Nº of Results: 15
         </ListBoxItem>
     </ListBox>

@@ -7,7 +7,7 @@
 
 	let query: string = "";
 	let inputSubmitted: boolean = false;
-	let rerender: boolean = false;
+	let rerenderSearch: boolean = false;
 	let rscount: number = 5;
 </script>
 
@@ -16,7 +16,7 @@
 	<svelte:fragment slot="header">
 		<AppBar slotTrail="grid grid-cols-1 justify-items-end text-right">
 			<svelte:fragment slot="trail">
-				<ResultsSelector bind:rscount />
+				<ResultsSelector bind:rscount bind:rerenderSearch />
 			</svelte:fragment>
 			<h3 class="text-left">Sego</h3>
 		</AppBar>
@@ -34,11 +34,11 @@
 			<!-- vertical padding from the previous component -->
 			<div class="grid py-3">
 				<!-- bind variables to propagate child changes to parent -->
-				<Search bind:query bind:inputSubmitted bind:rerender />
-				<!-- show results once the enter key has been sent -->
+				<Search bind:query bind:inputSubmitted bind:rerenderSearch />
+				<!-- only begin to show results once the enter key has been sent -->
 				{#if inputSubmitted}
-					<!-- rerender when query changes & enter is sent-->
-					{#key rerender}
+					<!-- rerender when query changes or when result count changes-->
+					{#key rerenderSearch}
 						<Results {query} {rscount} />
 					{/key}
 				{/if}

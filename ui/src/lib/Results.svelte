@@ -1,8 +1,9 @@
 <script lang="ts">
-    export let query: string = "";
+    export let query: string;
     export let rscount: number;
 
     console.log("<Results.svelte> searching: " + query);
+    console.log("<Results.svelte> count: " + rscount);
     const fetchResult = (async () => {
         const response = await fetch(
             "http://localhost:4000/search?query=" + query + "&count=" + rscount
