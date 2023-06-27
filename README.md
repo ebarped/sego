@@ -43,7 +43,7 @@ npm run dev
 ```
 
 ## Inner workings
-- Index: parse the .html docs into a json that maps, for each document every word occurrence inside it.
+- Index: parse the .html docs into a json that maps, for each document, every word occurrence inside it.
 - Serve: load the json file and apply `TF-IDF` algorithm to the search terms.
 
 ## TODO
