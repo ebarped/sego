@@ -1,8 +1,11 @@
 # sego
 Search Engine written in Go.
 
-This engine will index the linux API documentation stored in `linux-docs` folder using the `TF-IDF` method.
-It can also serve them through an API.
+This engine will index the linux API documentation stored in `linux-docs` folder inside `linux-kernel-docs.tgz` archive using the `TF-IDF` method.
+
+Also, it can:
+- Accept queries about the documents through an API.
+- Accept queries about the documents through a web.
 
 ## Documentation
 [Wikipedia](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
