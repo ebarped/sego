@@ -19,5 +19,5 @@ require (
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/bytedance/sonic v1.10.2
-	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 )
