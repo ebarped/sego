@@ -5,10 +5,11 @@ import (
 )
 
 const (
-	DOCS_PATH       = "../../linux-kernel-docs.tgz"
-	DOCS_PATH_DST   = "."
-	SEARCH_QUERY    = "memory management"
-	SAVE_STATE_PATH = "/tmp/sego_index.json"
+	DOCS_PATH          = "../../linux-kernel-docs.tgz"
+	DOCS_PATH_DST      = "."
+	SEARCH_QUERY       = "memory management"
+	SAVE_STATE_PATH    = "/tmp/sego_index.json"
+	QUERY_RESULT_COUNT = 5
 )
 
 var e *Engine
@@ -20,7 +21,7 @@ func init() {
 
 func BenchmarkSearch(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		e.Search(SEARCH_QUERY)
+		e.Search(SEARCH_QUERY, QUERY_RESULT_COUNT)
 	}
 }
 
