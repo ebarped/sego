@@ -15,11 +15,11 @@ require (
 	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
 )
 
 require (
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/bytedance/sonic v1.11.9
-	golang.org/x/net v0.26.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 )
