@@ -18,8 +18,6 @@
         <!-- hr draws a line -->
         <hr />
         <!-- vertical padding from the previous component -->
-        <div class="container justify-center grid py-3">
-            <Search/>
-        </div>
+        <Search/>
     </div>
 </div>

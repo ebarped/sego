@@ -1,55 +1,56 @@
 <script lang="ts">
-	import { Progress } from '@skeletonlabs/skeleton-svelte';
+    import { Progress } from '@skeletonlabs/skeleton-svelte';
 
-	// Define the shape of the data returned from the API
+    // Define the shape of the data returned from the API
     interface Result {
         query: string;
         documents: string[];
     }
 
-	// default values for the query
-	let query:string = $state("");
-	let resultCount:number = $state(5);
+    // Default values for the query
+    let query: string = $state("");
+    let resultCount: number = $state(5);
 
-	
-	let result:Result | null = $state(null); // start as null since no data is loaded
-    let loading:boolean = $state(false);
-	let progressBarValue:number = $state(10);
+    let result: Result | null = $state(null); // Start as null since no data is loaded
+    let loading: boolean = $state(false);
+    let progressBarValue: number = $state(10);
 
-	let error:string = $state("");
-	
-    async function fetchResults(): Promise<void>{
-		loading = true;
-		
-		if (query=="") {
-			error = "Invalid query: query must not be empty!"
-			loading = false;
-			result = null;
-			console.error(error);
-			return;
-		} else {
-			error = "";
-		}
+    let error: string = $state("");
+
+    async function fetchResults(): Promise<void> {
+        loading = true;
+
+        if (query == "") {
+            error = "Invalid query: query must not be empty!"
+            loading = false;
+            result = null;
+            console.error(error);
+            return;
+        } else {
+            error = "";
+        }
 
         try {
-			console.log("<Results.svelte> searching: " + query);
-			console.log("<Results.svelte> count: " + resultCount);
-			
-			for (let i = 0; i < 3; i++) {
-				progressBarValue += 30;
-				await sleep(800); // simulate transfer delay
-			}
-			progressBarValue = 10;
+            console.log("<Results.svelte> searching: " + query);
+            console.log("<Results.svelte> count: " + resultCount);
 
+            for (let i = 0; i < 3; i++) {
+                progressBarValue += 30;
+                await sleep(800); // Simulate transfer delay
+            }
+            progressBarValue = 10;
 
-			const res = await fetch(
+            const res = await fetch(
                 "http://localhost:4000/search?query=" + query + "&count=" + resultCount
             );
-            
-            if (!res.ok) throw new Error('Failed to fetch results from Search Engine');
-            
-			const jsonData: Result = await res.json();
-			result = jsonData;
+
+            if (!res.ok) {
+				error ='Failed to fetch results from Search Engine'
+				throw new Error('Failed to fetch results from Search Engine');
+			}
+
+            const jsonData: Result = await res.json();
+            result = jsonData;
         } catch (error) {
             console.error(error);
         } finally {
@@ -57,52 +58,59 @@
         }
     }
 
-
-	function sleep(ms: number): Promise<void> {
-  		return new Promise(resolve => setTimeout(resolve, ms));
-	}
-
+    function sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 </script>
 
-<div class="grid grid-cols-2 gap-4">
-	<!-- Search text input -->
-	<form class="flex mx-auto w-full space-y-4">
-		<input 
-			class="input h-8 pl-3 w-64"
-			type="search"
-			placeholder="Search..."
-			bind:value={query} 
-		/>
-	</form>
+<!-- Main form container with flex-column layout -->
+<div class="flex flex-col justify-center items-center space-y-4 py-4">
+    <!-- Search input and button -->
+    <div class="flex flex-row justify-center items-center space-x-2">
+        <input 
+            class="input h-8 pl-3 my-2 w-64"
+            type="search"
+            placeholder="Search..."
+            bind:value={query} 
+        />
+        <!-- Search button -->
+        <button 
+            type="button" 
+            class="btn preset-filled-primary-500 h-8 w-16"
+            onclick={fetchResults}
+            disabled={loading}
+        >
+            Search
+        </button>
+    </div>
 
-	<!-- Search button -->
-	<div class="flex mx-auto w-full space-y-4">
-		<button type="button" class="btn preset-filled-primary-500 h-8 w-16" onclick={fetchResults} disabled={loading}>Search</button>
-	</div>		
+    <!-- Show progress bar when loading -->
+    {#if loading}
+        <div class="w-1/2">
+            <Progress value={progressBarValue} />
+        </div>
+    {/if}
+	
+	<!-- Results section when loaded -->
+	{#if result && !loading}
+		<div class="card p-6 mx-auto max-w-3xl">
+			<h2 class="text-4xl font-semibold text-left mb-2">Results</h2>
+			<hr class="mb-2" />
+			<ul class="list-decimal pl-6">
+				{#each result.documents as d, i}
+					<li>
+						<span class="underline">{d}</span>
+					</li>
+				{/each}
+			</ul>
+		</div>
+	{/if}
+	
+    <!-- Show error message -->
+    {#if error}
+        <div class="text-red-500">
+			{error}
+		</div>
+    {/if}
 </div>
 
-<!-- results -->
-{#if error}
-	{error}
-{/if}
-{#if loading}
-	<div class="grid grid-cols-1 py-6">
-		<Progress value={progressBarValue} />
-	</div>
-{/if}
-
-{#if result && !loading}
-<div class="grid py-6">
-	<div class="card p-4 mx-auto justify-end">
-		<span class="text-4xl">Results</span>
-		<ul>
-			<hr class="py-1"/>
-			{#each result.documents as d, i}
-				<li>
-					{i + 1}. <span class="underline">{d}</span>
-				</li>
-			{/each}
-		</ul>
-	</div>
-</div>
-{/if}
