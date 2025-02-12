@@ -12,7 +12,7 @@ func BenchmarkIndex(b *testing.B) {
 	var di Document
 	var err error
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		di, err = index(path)
 		if err != nil {
 			log.Fatal(err)

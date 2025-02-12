@@ -20,27 +20,27 @@ func init() {
 }
 
 func BenchmarkSearch(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		e.Search(SEARCH_QUERY, QUERY_RESULT_COUNT)
 	}
 }
 
 func BenchmarkLoad(b *testing.B) {
 	e := New()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+
+	for b.Loop() {
 		e.Load(DOCS_PATH)
 	}
 }
 
 func BenchmarkSaveState(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		e.SaveState(SAVE_STATE_PATH)
 	}
 }
 
 func BenchmarkUntargz(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		untargz(DOCS_PATH_DST, DOCS_PATH)
 	}
 }
