@@ -1,0 +1,36 @@
+version: 2
+updates:
+  # Go modules (backend)
+  - package-ecosystem: "gomod"
+    directory: "/"                  # where go.mod lives
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "go"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+
+  # NPM / Svelte (frontend)
+  - package-ecosystem: "npm"
+    directory: "/ui"                # where package.json lives
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "frontend"
+      - "svelte"
+    commit-message:
+      prefix: "chore(deps-ui)"
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
