@@ -3,23 +3,22 @@ module github.com/ebarped/sego
 go 1.23.0
 
 require (
-	github.com/PuerkitoBio/goquery v1.9.2
-	github.com/charlievieth/fastwalk v1.0.4
-	github.com/go-chi/chi/v5 v5.0.14
+	github.com/PuerkitoBio/goquery v1.10.3
+	github.com/charlievieth/fastwalk v1.0.12
+	github.com/go-chi/chi/v5 v5.2.2
 )
 
 require (
-	github.com/bytedance/sonic/loader v0.1.1 // indirect
-	github.com/cloudwego/base64x v0.1.4 // indirect
-	github.com/cloudwego/iasm v0.2.0 // indirect
+	github.com/bytedance/sonic/loader v0.3.0 // indirect
+	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
 )
 
 require (
-	github.com/andybalholm/cascadia v1.3.2 // indirect
-	github.com/bytedance/sonic v1.11.9
-	golang.org/x/net v0.38.0 // indirect
+	github.com/andybalholm/cascadia v1.3.3 // indirect
+	github.com/bytedance/sonic v1.14.0
+	golang.org/x/net v0.39.0 // indirect
 )
